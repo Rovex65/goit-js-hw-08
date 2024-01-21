@@ -89,17 +89,22 @@ function onImageClick(event) {
   event.preventDefault();
   const instance = basicLightbox.create(
     `
-    <img src="${event.target.dataset.source}">
+    <img src="${event.target.dataset.source}" alt="${event.target.alt}">
 `,
     {
       onShow: (instance) => {
-        document.addEventListener("keydown", ({ key }) => {
-          if (key == "Escape") {
-            instance.close();
-          }
-        });
+        document.addEventListener("keydown", onEscapeClose);
       },
+      onclose: (instance) =>
+        document.removeEventListener("keydown", onEscapeClose),
     }
   );
+
   instance.show();
+
+  function onEscapeClose({ key }) {
+    if (key == "Escape") {
+      instance.close();
+    }
+  }
 }
